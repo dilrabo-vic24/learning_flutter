@@ -13,32 +13,10 @@ class _ExplicitAnimationExampleState extends State<ExplicitAnimationExample>
   late AnimationController _controller;
   late Animation<double> _sizeAnimation;
   late Animation<Offset> _positionAnimation;
-  late Animation<Color> _colorAnimation;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     super.initState();
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
@@ -51,7 +29,7 @@ class _ExplicitAnimationExampleState extends State<ExplicitAnimationExample>
     _positionAnimation = Tween<Offset>(
             begin: Offset(-1.0, 0.0), end: Offset(1.0, 0.0))
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _colorAnimation = Tween<Color>(begin: Colors.blue, end: Colors.red)
+    _colorAnimation = ColorTween(begin: Colors.blue, end: Colors.red)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward();
@@ -78,6 +56,6 @@ class _ExplicitAnimationExampleState extends State<ExplicitAnimationExample>
   @override
   void dispose() {
     super.dispose();
-    super.dispose();
+    _controller.dispose();
   }
 }
