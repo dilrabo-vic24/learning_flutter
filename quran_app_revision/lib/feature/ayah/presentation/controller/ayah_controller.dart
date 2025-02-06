@@ -18,7 +18,7 @@ class AyahController extends ChangeNotifier {
 
   Future<void> getAyah({required int surahNumber}) async {
     log("ayah called in provider");
-    isLoading = false;
+    isLoading = true;
     notifyListeners();
 
     final response = await ayahUsecase.call(surahNumber: surahNumber);
@@ -34,7 +34,7 @@ class AyahController extends ChangeNotifier {
 
   Future<void> getAllAyah({required int surahNumber}) async {
     log("all ayah called in provider");
-    isLoading = false;
+    isLoading = true;
     notifyListeners();
 
     log("nimadir");

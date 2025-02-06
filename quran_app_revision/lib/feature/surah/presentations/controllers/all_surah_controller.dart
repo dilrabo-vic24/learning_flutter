@@ -14,7 +14,7 @@ class AllSurahController extends ChangeNotifier {
 
   Future<void> getAllSurah() async {
     log("All Surah called in provider");
-    isLoading = false;
+    isLoading = true;
     notifyListeners();
     final result = await getAllSurahUsecase.call();
     result.fold((l) => message = l, (r) => allSurah = r);

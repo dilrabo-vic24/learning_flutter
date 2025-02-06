@@ -6,9 +6,11 @@ Widget customTextStyle({
   double? fontSize,
   FontWeight? fontWeight,
   Color? textColor,
+  TextAlign? textAlign,
 }) {
   return Text(
     text,
+    textAlign: textAlign ?? TextAlign.start,
     maxLines: 2,
     style: TextStyle(
       color: textColor ?? Colors.black,

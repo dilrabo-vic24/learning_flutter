@@ -15,4 +15,5 @@ class LoginUsecase {
       password: password,
     );
   }
+
 }

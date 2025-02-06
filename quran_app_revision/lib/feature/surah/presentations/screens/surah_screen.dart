@@ -1,15 +1,17 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import 'package:quran_app_revision/core/utils/app_colors.dart';
 import 'package:quran_app_revision/core/utils/app_images.dart';
 import 'package:quran_app_revision/core/utils/custom_text_style.dart';
+import 'package:quran_app_revision/feature/ayah/presentation/screens/ayah_by_surah_screen.dart';
 import 'package:quran_app_revision/feature/surah/presentations/controllers/all_surah_controller.dart';
 import 'package:quran_app_revision/feature/surah/presentations/widgets/surah_widget.dart';
 
 class SurahScreen extends StatefulWidget {
+  static const path = "/surah";
   const SurahScreen({super.key});
   @override
   State<SurahScreen> createState() => _SurahScreenState();
@@ -93,10 +95,19 @@ class _SurahScreenState extends State<SurahScreen>
                                 allSurahController.allSurah!.data!.length,
                             itemBuilder: (context, index) {
                               // log("nimadir");
-                              return SurahWidget(
-                                  allSurah:
-                                      allSurahController.allSurah!.data![index],
-                                  index: index);
+                              return GestureDetector(
+                                onTap: () {
+                                   final surahId = allSurahController.allSurah?.data?[index].number;
+
+                                  if(surahId != null){
+                                         context.pushNamed(AyahScreen.path, extra: surahId);
+                                  }
+                                },
+                                child: SurahWidget(
+                                    allSurah:
+                                        allSurahController.allSurah!.data![index],
+                                    index: index),
+                              );
                             }),
                       );
                     }),
