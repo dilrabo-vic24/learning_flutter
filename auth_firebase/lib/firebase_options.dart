@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'fir-auth-example-91bcc.firebasestorage.app',
     iosBundleId: 'com.example.authFirebase',
   );
+
 }
