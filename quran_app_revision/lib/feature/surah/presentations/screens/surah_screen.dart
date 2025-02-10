@@ -8,6 +8,7 @@ import 'package:quran_app_revision/core/utils/app_images.dart';
 import 'package:quran_app_revision/core/utils/custom_text_style.dart';
 import 'package:quran_app_revision/feature/ayah/presentation/screens/ayah_by_surah_screen.dart';
 import 'package:quran_app_revision/feature/surah/presentations/controllers/all_surah_controller.dart';
+import 'package:quran_app_revision/feature/surah/presentations/screens/another.dart';
 import 'package:quran_app_revision/feature/surah/presentations/widgets/surah_widget.dart';
 
 class SurahScreen extends StatefulWidget {
@@ -89,29 +90,37 @@ class _SurahScreenState extends State<SurahScreen>
                   child: TabBarView(controller: tabController, children: [
                     Consumer<AllSurahController>(
                         builder: (context, allSurahController, child) {
-                      return Expanded(
-                        child: ListView.builder(
-                            itemCount:
-                                allSurahController.allSurah!.data!.length,
-                            itemBuilder: (context, index) {
-                              // log("nimadir");
-                              return GestureDetector(
-                                onTap: () {
-                                   final surahId = allSurahController.allSurah?.data?[index].number;
+                      if (allSurahController.isLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                              itemCount:
+                                  allSurahController.allSurah!.data!.length,
+                              itemBuilder: (context, index) {
+                                // log("nimadir");
+                                return GestureDetector(
+                                  onTap: () {
+                                    final surahId = allSurahController
+                                        .allSurah?.data?[index].number;
 
-                                  if(surahId != null){
-                                         context.pushNamed(AyahScreen.path, extra: surahId);
-                                  }
-                                },
-                                child: SurahWidget(
-                                    allSurah:
-                                        allSurahController.allSurah!.data![index],
-                                    index: index),
-                              );
-                            }),
-                      );
+                                    if (surahId != null) {
+                                      context.push(AyahScreen.path,
+                                          extra: surahId);
+                                    }
+                                  },
+                                  child: SurahWidget(
+                                      allSurah: allSurahController
+                                          .allSurah!.data![index],
+                                      index: index),
+                                );
+                              }),
+                        );
+                      }
                     }),
-                    customTextStyle(text: "Tabbar 2")
+                    customTextStyle(text: "Porah")
                   ]))
             ],
           ),

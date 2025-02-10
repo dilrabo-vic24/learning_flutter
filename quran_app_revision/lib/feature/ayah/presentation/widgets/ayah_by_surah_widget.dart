@@ -1,13 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:provider/provider.dart';
 import 'package:quran_app_revision/core/utils/app_colors.dart';
 import 'package:quran_app_revision/core/utils/custom_text_style.dart';
 import 'package:quran_app_revision/feature/ayah/domain/entities/all_ayah_model.dart';
 import 'package:quran_app_revision/feature/ayah/domain/entities/ayah_entity.dart';
-//import 'package:quran_app_revision/feature/ayah/presentation/widgets/audio_helper.dart'; // Removed AudioHelper
-
 
 class AyahBySurahWidget extends StatefulWidget {
   final AyahEntity ayahEntity;
@@ -25,45 +24,45 @@ class AyahBySurahWidget extends StatefulWidget {
 }
 
 class _AyahBySurahWidgetState extends State<AyahBySurahWidget> {
-  final AudioPlayer _audioPlayer = AudioPlayer(); // Initialize AudioPlayer
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    _initAudioPlayer(); // Moved initialization to a separate method
+    _initAudioPlayer();
   }
 
   Future<void> _initAudioPlayer() async {
     try {
-      await _audioPlayer.setUrl(widget.ayahEntity.audio!); // Load audio URL
+      await _audioPlayer.setUrl(widget.ayahEntity.audio!);
     } catch (e) {
       print("Error loading audio: $e");
-      // Handle error appropriately (e.g., show an error message to the user)
     }
   }
 
-
   @override
   void dispose() {
-    _audioPlayer.dispose(); // Dispose the player in dispose() method
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   Future<void> togglePlayPause() async {
     if (_audioPlayer.playing) {
       await _audioPlayer.pause();
+      setState(() {
+        isPlaying = _audioPlayer.playing;
+        
+      });
+      log("isplaying $isPlaying");
     } else {
       try {
         await _audioPlayer.play();
+        log("isplaying2 $isPlaying");
       } catch (e) {
         print('Error playing audio: $e');
-        // Handle play error, e.g., show an error message to the user
       }
     }
-    setState(() {
-      isPlaying = _audioPlayer.playing;
-    });
   }
 
   Widget build(BuildContext context) {
@@ -86,15 +85,16 @@ class _AyahBySurahWidgetState extends State<AyahBySurahWidget> {
                 radius: 15.r,
                 backgroundColor: AppColors.mianTextColor,
                 child: customTextStyle(
-                    text: widget.index.toString(), textColor: AppColors.white),
+                    text: (widget.index + 1).toString(),
+                    textColor: AppColors.white),
               ),
               Spacer(),
               IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.share, color: AppColors.mianTextColor)),
               IconButton(
-                  onPressed: () {
-                    togglePlayPause(); // Call local togglePlayPause
+                  onPressed: () async {
+                    await togglePlayPause(); // Call local togglePlayPause
                   },
                   icon: Icon(
                       isPlaying ? Icons.pause : Icons.play_arrow_outlined,
@@ -111,7 +111,6 @@ class _AyahBySurahWidgetState extends State<AyahBySurahWidget> {
             textAlign: TextAlign.right,
             textColor: AppColors.white,
             fontSize: 30.sp),
-
         customTextStyle(
             text: widget.allAyahEntity.text!,
             fontSize: 18.sp,

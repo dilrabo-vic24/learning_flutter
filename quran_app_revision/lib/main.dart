@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:quran_app_revision/core/common/routers/go_router.dart';
 import 'package:quran_app_revision/core/common/services/injection_container.dart';
 import 'package:quran_app_revision/feature/ayah/presentation/controller/ayah_controller.dart';
 import 'package:quran_app_revision/feature/ayah/presentation/screens/ayah_by_surah_screen.dart';
@@ -31,13 +32,14 @@ class MyApp extends StatelessWidget {
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
-        child: MaterialApp(
+        child: MaterialApp.router(
+          routerConfig: appRouter,
           title: 'Flutter Demo',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: AyahScreen(),
+          // home: SurahScreen(),
         ),
       ),
     );
