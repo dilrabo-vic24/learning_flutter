@@ -1,3 +1,4 @@
+import 'package:auth_firebase/presentations/screens/todo_screen.dart';
 import 'package:auth_firebase/presentations/widgets/custom_text_style.dart';
 import 'package:auth_firebase/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                 email: emailController.text.trim(),
                                 password: passwordController.text.trim(),
                               );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TodoScreen(),
+                            ));
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: CustomTextStyle(
