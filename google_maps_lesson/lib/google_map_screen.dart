@@ -20,6 +20,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   Set<Marker> markers = {};
   LatLng? currentPosition;
+  MapType _currentMapType = MapType.normal; // Xarita turi
 
   @override
   void initState() {
@@ -28,12 +29,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Future<void> _setInitialLocation() async {
-
     final LocationData currentLocation =
         await GetCurrentLocationService().getCurrentLocation();
 
     if (currentLocation.latitude == null || currentLocation.longitude == null) {
-      // log("error");
       return;
     }
 
@@ -62,11 +61,34 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Google Map"),
+        actions: [
+          DropdownButton<MapType>(
+            value: _currentMapType,
+            dropdownColor: Colors.white,
+            icon: Icon(Icons.map, color: Colors.white),
+            onChanged: (MapType? newType) {
+              if (newType != null) {
+                setState(() {
+                  _currentMapType = newType;
+                });
+              }
+            },
+            items: MapType.values.map((mapType) {
+              return DropdownMenuItem<MapType>(
+                value: mapType,
+                child: Text(mapType.toString().split('.').last),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
       body: GoogleMap(
         onMapCreated: (controller) {
           _completer.complete(controller);
         },
-        mapType: MapType.normal,
+        mapType: _currentMapType, // Xarita turini dinamik o'zgartirish
         markers: markers,
         initialCameraPosition: CameraPosition(
           target:
