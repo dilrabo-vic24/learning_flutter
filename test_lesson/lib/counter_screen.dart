@@ -32,9 +32,7 @@ class CounterScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'You have pushed the button this many times:',
-            ),
+            Text('You have pushed the button this many times:'),
             Obx(() => Text(
                   '${controller.count.value}',
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
@@ -55,6 +53,13 @@ class CounterScreen extends StatelessWidget {
                   onPressed: controller.increment,
                   tooltip: 'Increment',
                   child: Icon(Icons.add),
+                ),
+                SizedBox(width: 20),
+                FloatingActionButton(
+                  key: Key('reset_button'),
+                  onPressed: controller.reset,
+                  tooltip: 'Reset',
+                  child: Icon(Icons.refresh),
                 ),
               ],
             ),
