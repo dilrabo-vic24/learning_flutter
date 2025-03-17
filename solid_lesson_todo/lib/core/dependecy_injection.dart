@@ -5,7 +5,9 @@ import 'package:solid_lesson_todo/features/get_tasks/data/repos/remote_task_repo
 import 'package:solid_lesson_todo/features/get_tasks/data/source/remote_datasource.dart';
 import 'package:solid_lesson_todo/features/get_tasks/domain/repos/task_repo.dart';
 import 'package:solid_lesson_todo/features/get_tasks/domain/usecase/add_todo_usecase.dart';
+import 'package:solid_lesson_todo/features/get_tasks/domain/usecase/delete_todo_usecase.dart';
 import 'package:solid_lesson_todo/features/get_tasks/domain/usecase/get_todos_usecase.dart';
+import 'package:solid_lesson_todo/features/get_tasks/domain/usecase/update_todo.dart';
 
 final getIT = GetIt.instance;
 
@@ -23,5 +25,9 @@ void init() {
       () => RemoteTaskRepoImpl(remoteDatasource: getIT<RemoteDatasource>()),
     )
     ..registerLazySingleton(() => GetTodosUsecase(readOnlyTaskRepo: getIT()))
-    ..registerLazySingleton(() => AddTodoUsecase(writeOnlyTaskRepo: getIT()));
+    ..registerLazySingleton(() => AddTodoUsecase(writeOnlyTaskRepo: getIT()))
+    ..registerLazySingleton(() => UpdateTodoUsecase(writeOnlyTaskRepo: getIT()))
+    ..registerLazySingleton(
+      () => DeleteTodoUsecase(writeOnlyTaskRepo: getIT()),
+    );
 }

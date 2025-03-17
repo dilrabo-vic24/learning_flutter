@@ -1,11 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:solid_lesson_todo/features/get_tasks/domain/model/task_model.dart';
 
 import 'package:solid_lesson_todo/features/get_tasks/presentations/controllers/tasks_provider.dart';
-import 'package:solid_lesson_todo/features/get_tasks/presentations/widgets/task_tile_widget.dart';
+import 'package:solid_lesson_todo/features/get_tasks/presentations/widgets/add_task_dialog.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
@@ -25,15 +25,13 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Todo List")),
-      // body: Center(child: Text("Men")),
       body: Consumer<TaskProvider>(
         builder: (context, taskProvider, child) {
           final tasks = taskProvider.tasks;
-          log("tasks at screen: $tasks");
           if (taskProvider.isLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (taskProvider.errorMessage != null ||
-              taskProvider.errorMessage!.isEmpty) {
+          } else if (taskProvider.errorMessage != null &&
+              taskProvider.errorMessage!.isNotEmpty) {
             return Center(child: Text(taskProvider.errorMessage!));
           } else {
             return Column(
@@ -43,8 +41,34 @@ class _TaskScreenState extends State<TaskScreen> {
                   child: ListView.builder(
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
-                      log("len: ${tasks.length}");
-                      return TaskTile(task: tasks[index]);
+                      final task = tasks[index];
+                      return ListTile(
+                        title: Text(task.title),
+                        leading: Checkbox(
+                          value: task.completed,
+                          onChanged: (value) {},
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed:
+                                  () => showUpdateTaskDialog(
+                                    context,
+                                    taskProvider,
+                                    task,
+                                  ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                taskProvider.deleteTodo(task.id);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -53,10 +77,65 @@ class _TaskScreenState extends State<TaskScreen> {
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => showAddTaskDialog(context),
-      //   child: Icon(Icons.add),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showAddTaskDialog(context),
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  void showUpdateTaskDialog(
+    BuildContext context,
+    TaskProvider taskProvider,
+    TaskModel task,
+  ) {
+    final TextEditingController titleController = TextEditingController(
+      text: task.title,
+    );
+    bool isCompleted = task.completed;
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text("Update Task"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(labelText: "Task Title"),
+                ),
+                CheckboxListTile(
+                  title: Text("Completed"),
+                  value: isCompleted,
+                  onChanged: (value) {
+                    if (value != null) {
+                      isCompleted = value;
+                    }
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  taskProvider.updateTodo(
+                    id: task.id,
+                    userId: task.userId,
+                    title: titleController.text,
+                    completed: isCompleted,
+                  );
+                  Navigator.pop(context);
+                },
+                child: Text("Update"),
+              ),
+            ],
+          ),
     );
   }
 }
